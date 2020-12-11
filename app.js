@@ -102,23 +102,45 @@ function askUserForEngineerInfo() {
         employeeList.push( newEngineer);
 
         askUserForEmployeeType();
-    })
+    });
 
-}
-//What is your enigeer's name?
-//What is your engineer's id?
-//What is your enigeer's email?
-//What is your enigeer's github username?
-
-//Ask again which type of employee to add
+};
 
 function askUserForInternInfo() {
+    
+    return inquirer.prompt([
+        {
+            type: "input",
+            message: "What is your intern's name?",
+            name: "name",
+        },
+        {
+            type: "input",
+            message: "What is your intern's id?",
+            name: "id",
+        },
+        {
+            type: "input",
+            message: "What is your intern's email?",
+            name: "email",
+        },
+        {
+            type: "input",
+            message: "What is the name of your intern's school?",
+            name: "school",
+        },
+    ]).then(( internInfo) => {
 
-}
-//What is your intern's name?
-//What is your intern's id?
-//What is your intern's email?
-//What school does your intern go to?
+        const newIntern = new Intern (internInfo.name, internInfo.id, internInfo.email, internInfo.school);
+
+        employeeLIst.push( newIntern);
+
+        askUserForEmployeeType();
+
+    });
+
+};
+
 
 //I don't want to add anymore team members will exit out of application
 //In output folder is a created html file
@@ -127,7 +149,10 @@ function createHTMLFile() {
 
     const htmlContent = render( employeeList );
 
-    //Use fs module to create output file
+    fs.writeFile("employeeSummary.html", render( response ), (err) => {
+        err ? console.log(err) : console.log("Success!");
+        
+    })
 
 }
 
