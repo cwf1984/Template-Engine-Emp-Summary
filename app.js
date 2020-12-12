@@ -1,4 +1,4 @@
-const Employee = require("./lib/Employee");
+// const Employee = require("./lib/Employee");
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
@@ -57,15 +57,17 @@ function askUserForEmployeeType() {
             message: "Which type of team member would you like to add? (Use arrow keys)",
             name: "employeeChoice",
             type: "list",
-            choices: ["Manager", "Engineer", "Intern"]
+            choices: ["Engineer", "Intern", "I don't want to add anymore employees"]
         },
-    ]).then(( askUserForEmployeeType.response ) => {
+    ]).then(( response ) => {
+        // console.log(response);
         // if selected new enigneer
-        if ( "engineer" ) {
+        if ( response.employeeChoice === "Engineer" ) {
+
             askUserForEngineerInfo();
         }
         //else if user selected a new intern
-        else if ( "intern" ) {
+        else if ( response.employeeChoice == "Intern" ) {
             askUserForInternInfo();
         }
         else {
@@ -133,7 +135,7 @@ function askUserForInternInfo() {
 
         const newIntern = new Intern (internInfo.name, internInfo.id, internInfo.email, internInfo.school);
 
-        employeeLIst.push( newIntern);
+        employeeList.push( newIntern);
 
         askUserForEmployeeType();
 
@@ -147,9 +149,10 @@ function askUserForInternInfo() {
 
 function createHTMLFile() {
 
-    const htmlContent = render( employeeList );
+    // const htmlContent = render( employeeList );
+    // console.log(employeeList);
 
-    fs.writeFile("employeeSummary.html", render( response ), (err) => {
+    fs.writeFile("employeeSummary.html", render( employeeList ), (err) => {
         err ? console.log(err) : console.log("Success!");
         
     })
