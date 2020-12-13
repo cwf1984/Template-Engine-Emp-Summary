@@ -40,7 +40,7 @@ function getManagerData() {
         },
     ]).then(( managerData ) => {
 
-        const newManager = new Manager ( managerData.name, managerData.id, managerData.email, managerData.officeNumber );
+        const newManager = new Manager ( managerData.name, managerData.id, managerData.email, managerData.number );
 
         employees.push( newManager );
 
@@ -97,10 +97,10 @@ function getEngineerData() {
             message: "What is your engineer's GitHub username?",
             name: "github",
         },
-    ]).then(( engineerData) => {
+    ]).then(( engineerData ) => {
         const newEngineer = new Engineer (engineerData.name, engineerData.id, engineerData.email, engineerData.github);
 
-        employees.push( newEngineer);
+        employees.push( newEngineer );
 
         chooseEmployee();
     });
@@ -148,7 +148,7 @@ function getInternData() {
 
 function createHTMLFile() {
 
-    fs.writeFile("employeeSummary.html", render( employees ), (err) => {
+    fs.writeFile(path.resolve(outputPath), render( employees ), (err) => {
         err ? console.log(err) : console.log("Success!");
         
     })
@@ -156,3 +156,4 @@ function createHTMLFile() {
 }
 
 getManagerData();
+
