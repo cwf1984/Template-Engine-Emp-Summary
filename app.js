@@ -2,8 +2,8 @@
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
-const inquirer = require("inquirer");
 
+const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 
@@ -12,10 +12,10 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
-const employeeList = [];
+const employees = [];
 
 // ask for manager information
-function askUserForManagerInfo() {
+function getManagerData() {
     return inquirer.prompt([
         {
             type: "input",
@@ -38,20 +38,20 @@ function askUserForManagerInfo() {
             message: "What is your manager's office number?",
             name: "number",
         },
-    ]).then(( managerInfo ) => {
+    ]).then(( managerData ) => {
 
-        const newManager = new Manager ( managerInfo.name, managerInfo.id, managerInfo.email, managerInfo.officeNumber );
+        const newManager = new Manager ( managerData.name, managerData.id, managerData.email, managerData.officeNumber );
 
-        employeeList.push( newManager);
+        employees.push( newManager );
 
-        askUserForEmployeeType();
+        chooseEmployee();
 
     });
 
 };
 
 //Ask user for next employee type
-function askUserForEmployeeType() {
+function chooseEmployee() {
     return inquirer.prompt([
         {
             message: "Which type of team member would you like to add? (Use arrow keys)",
@@ -63,12 +63,11 @@ function askUserForEmployeeType() {
         // console.log(response);
         // if selected new enigneer
         if ( response.employeeChoice === "Engineer" ) {
-
-            askUserForEngineerInfo();
+            getEngineerData();
         }
         //else if user selected a new intern
         else if ( response.employeeChoice == "Intern" ) {
-            askUserForInternInfo();
+            getInternData();
         }
         else {
          createHTMLFile();   
@@ -76,7 +75,7 @@ function askUserForEmployeeType() {
     });
 };
 
-function askUserForEngineerInfo() {
+function getEngineerData() {
     return inquirer.prompt([
         {
             type: "input",
@@ -98,17 +97,17 @@ function askUserForEngineerInfo() {
             message: "What is your engineer's GitHub username?",
             name: "github",
         },
-    ]).then(( engineerInfo) => {
-        const newEngineer = new Engineer (engineerInfo.name, engineerInfo.id, engineerInfo.email, engineerInfo.github);
+    ]).then(( engineerData) => {
+        const newEngineer = new Engineer (engineerData.name, engineerData.id, engineerData.email, engineerData.github);
 
-        employeeList.push( newEngineer);
+        employees.push( newEngineer);
 
-        askUserForEmployeeType();
+        chooseEmployee();
     });
 
 };
 
-function askUserForInternInfo() {
+function getInternData() {
     
     return inquirer.prompt([
         {
@@ -131,13 +130,13 @@ function askUserForInternInfo() {
             message: "What is the name of your intern's school?",
             name: "school",
         },
-    ]).then(( internInfo) => {
+    ]).then(( internData ) => {
 
-        const newIntern = new Intern (internInfo.name, internInfo.id, internInfo.email, internInfo.school);
+        const newIntern = new Intern (internData.name, internData.id, internData.email, internData.school);
 
-        employeeList.push( newIntern);
+        employees.push( newIntern );
 
-        askUserForEmployeeType();
+        chooseEmployee();
 
     });
 
@@ -149,45 +148,11 @@ function askUserForInternInfo() {
 
 function createHTMLFile() {
 
-    // const htmlContent = render( employeeList );
-    // console.log(employeeList);
-
-    fs.writeFile("employeeSummary.html", render( employeeList ), (err) => {
+    fs.writeFile("employeeSummary.html", render( employees ), (err) => {
         err ? console.log(err) : console.log("Success!");
         
     })
 
 }
 
-askUserForManagerInfo();
-
-//Creating array list of objects 
-//each object is going to be a created manager, engineer or intern object from one of the classes
-
-
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
-
-
-
-// After the user has input all employees desired, call the `render` function (required
-// above) and pass in an array containing all employee objects; the `render` function will
-// generate and return a block of HTML including templated divs for each employee!
-
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+getManagerData();
